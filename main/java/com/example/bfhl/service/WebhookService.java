@@ -12,11 +12,11 @@ public class WebhookService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public void executeWorkflow() {
-        String name = "John Doe";
-        String regNo = "REG12347";
-        String email = "john@example.com";
+        String name = "Palash Jain";
+        String regNo = "0827AL221095";
+        String email = "palashjain220571@acropolis.in";
 
-        // 1. Generate webhook
+       
         String genUrl = "https://bfhldevapigw.healthrx.co.in/hiring/generateWebhook/JAVA";
 
         Map<String, String> requestBody = new HashMap<>();
@@ -35,10 +35,20 @@ public class WebhookService {
         System.out.println("Webhook: " + webhookUrl);
         System.out.println("Token: " + token);
 
-        // 2. Manually solve SQL from downloaded link
-        String finalQuery = "SELECT name FROM users WHERE status = 'active';"; // Replace with real query
+       
+        String finalQuery = "SELECT 
+    p.AMOUNT AS SALARY,
+    CONCAT(e.FIRST_NAME, ' ', e.LAST_NAME) AS NAME,
+    FLOOR(DATEDIFF(CURDATE(), e.DOB) / 365.25) AS AGE,
+    d.DEPARTMENT_NAME
+FROM PAYMENTS p
+JOIN EMPLOYEE e ON p.EMP_ID = e.EMP_ID
+JOIN DEPARTMENT d ON e.DEPARTMENT = d.DEPARTMENT_ID
+WHERE DAY(p.PAYMENT_TIME) != 1
+ORDER BY p.AMOUNT DESC
+LIMIT 1"; 
 
-        // 3. Submit final query
+        
         HttpHeaders authHeaders = new HttpHeaders();
         authHeaders.setContentType(MediaType.APPLICATION_JSON);
         authHeaders.setBearerAuth(token);
